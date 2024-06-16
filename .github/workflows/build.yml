@@ -62,7 +62,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.EC2_VEIGHT }}
-          passowrd: ${{ secrets.EC2_VEIGHT_PASS }}
+          password: ${{ secrets.EC2_VEIGHT_PASS }}
           port: ${{ secrets.PORT }}
           script: |
                   whoami
