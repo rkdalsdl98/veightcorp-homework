@@ -12,7 +12,7 @@ on:
 jobs:
   # build:
   #   name: 변경사항 체크 및 캐싱
-  #   runs-on: ubuntu-20.04
+  #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v3
   #     - name: NodeJS Setup
@@ -33,7 +33,7 @@ jobs:
     #needs: build
     name: 배포 시작
     #if: ${{ success() }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       # - uses: docker/setup-buildx-action@v2
@@ -61,11 +61,19 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ${{ secrets.EC2_VEIGHT }}
+          passowrd: ${{ secrets.EC2_VEIGHT_PASS }}
           port: ${{ secrets.PORT }}
-          key: ${{ secrets.PRIVATE_KEY }}
           script: |
                   whoami
+        
+        # with:
+        #   host: ${{ secrets.HOST }}
+        #   username: ${{ secrets.EC2_USER }}
+        #   port: ${{ secrets.PORT }}
+        #   key: ${{ secrets.PRIVATE_KEY }}
+        #   script: |
+        #           whoami
               
           # git config --global user.name ${{ secrets.GIT_USER }}
           # git config --global user.email ${{ secrets.GIT_USER_EMAIL }}
