@@ -58,14 +58,21 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKER_REPO }}/veightcorp-homework:deploy
       - name: Deploy to EC2
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.EC2_USER }}
-          port: ${{ secrets.PORT }}
-          key: ${{ secrets.PRIVATE_KEY }}
-          script: |
-                  whoami
+        run: |
+            echo "${{ secrets.PRIVATE_KEY }}" private_key.pem
+            ssh -i "private_key.pem" ${{ secrets.EC2_USER }}@${{ secrets.HOST }}
+            
+            whoami
+
+
+        # uses: appleboy/ssh-action@v1.0.3
+        # with:
+        #   host: ${{ secrets.HOST }}
+        #   username: ${{ secrets.EC2_USER }}
+        #   port: ${{ secrets.PORT }}
+        #   key: ${{ secrets.PRIVATE_KEY }}
+        #   script: |
+        #           whoami
               
           # git config --global user.name ${{ secrets.GIT_USER }}
           # git config --global user.email ${{ secrets.GIT_USER_EMAIL }}
