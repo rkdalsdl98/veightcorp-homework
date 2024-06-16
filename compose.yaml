@@ -1,0 +1,45 @@
+version: "3"
+services:
+  db:
+    container_name: postgres
+    build: ./prisma
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USERNAME=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    networks:
+      - servernet
+  server:
+    container_name: veightcorp-server
+    build: ./
+    ports:
+      - 80:80
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - SERVER_IP=${SERVER_IP}
+      - SERVER_PORT=${SERVER_PORT}
+      - REDIS_PORT=${REDIS_PORT}
+      - JWT_EXPIRATION_AT_DAY=${JWT_EXPIRATION_AT_DAY}
+      - JWT_EXPIRATION_AT_DAY_REFRESH=${JWT_EXPIRATION_AT_DAY_REFRESH}
+      - JWT_SECRET=${JWT_SECRET}
+      - COOKIE_MAXAGE=${COOKIE_MAXAGE}
+      - POST_DETAIL_TTL=${POST_DETAIL_TTL}
+      - POST_DETAIL_CRITICAL_POINT=${POST_DETAIL_CRITICAL_POINT}
+    entrypoint: ["sh", "-c"]
+    # DB 컨테이너가 완전히 로드되기 이전에 명령어가 실행되면
+    # DB 동기화와 시드데이터를 넣을 수 없으므로 일정 시간 멈춤
+    # 맨 마지막 구문은 없는 파읽을 읽게해 강제로 컨테이너가 종료되지 않게 함
+    command: 
+      - |
+        sleep 5
+        service redis-server start
+        npx prisma db push
+        npm run start:prod
+        tail -f /dev/null
+    networks:
+      - servernet
+networks:
+  servernet:
+    external: true
