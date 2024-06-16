@@ -58,11 +58,13 @@ jobs:
       #     push: true
       #     tags: ${{ secrets.DOCKER_REPO }}/veightcorp-homework:deploy
       - name: Deploy to EC2
-        run: |
-            echo "${{ secrets.PRIVATE_KEY }}" > private_key.pem
-            chmod 600 private_key.pem
-            ssh -i "private_key.pem" ${{ secrets.EC2_USER }}@${{ secrets.HOST }}
-
+        uses: appleboy/ssh-action@v0.1.9
+        with:
+          host: ${{ secrets.HOST }
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
             whoami
 
 
