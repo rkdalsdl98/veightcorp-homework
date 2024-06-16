@@ -28,10 +28,8 @@ export class UserController {
                 "access",
                 `${accesstoken}`,
                 {
-                    secure: true,
                     httpOnly: true,
-                    sameSite: "none",
-                    domain: "localhost",
+                    domain: "*",
                     path: "/",
                     maxAge: parseInt(process.env.COOKIE_MAXAGE ?? "0"),
                 }
@@ -40,10 +38,8 @@ export class UserController {
                 "refresh",
                 `${refreshtoken}`,
                 {
-                    secure: true,
                     httpOnly: true,
-                    sameSite: "none",
-                    domain: "localhost",
+                    domain: "*",
                     path: "/",
                     maxAge: parseInt(process.env.COOKIE_MAXAGE ?? "0"),
                 }
@@ -76,10 +72,8 @@ export class UserController {
                     "access",
                     `${data.accesstoken}`,
                     {
-                        secure: true,
                         httpOnly: true,
-                        sameSite: "none",
-                        domain: "localhost",
+                        domain: "*",
                         path: "/",
                         maxAge: parseInt(process.env.COOKIE_MAXAGE ?? "0"),
                     }
@@ -123,10 +117,8 @@ export class UserController {
             name, 
             "", 
         {
-            secure: true,
             httpOnly: true,
-            domain: "localhost",
-            sameSite: "none",
+            domain: "*",
             path: "/",
             maxAge: 0,
         })
