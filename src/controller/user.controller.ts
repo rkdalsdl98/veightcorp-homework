@@ -13,6 +13,12 @@ export class UserController {
         private readonly service: UserService,
     ){}
 
+    /**
+     * @param {UserBody.Post.Login} body 
+     * @returns 로그인에 성공하면 쿠키에 토큰정보를 저장하고, 유저 정보를 반환합니다.
+     * 
+     * @tag User Public
+     */
     @TypedRoute.Post("login")
     async login(
         @Res() response: Response,
@@ -59,6 +65,15 @@ export class UserController {
         }
     }
 
+    /**
+     * 액세스 토큰이 만료되었을 경우, 새로운 액세스 토큰을 반환하고, 쿠키를 갱신합니다.
+     * 
+     * 리프레시 토큰이 만료되었을 경우, 쿠키에 담긴 토큰정보를 삭제하고, 재 로그인을 유도합니다.
+     * 
+     * @returns 토큰이 유효하다면 유저 정보를 반환합니다.
+     * 
+     * @tag User Private
+     */
     @TypedRoute.Post("login/token")
     @UseGuards(AuthGuard)
     async tokenLogin(
@@ -98,6 +113,13 @@ export class UserController {
         }
     }
 
+
+    /**
+     * @param body 
+     * @returns 회원가입에 성공 여부를 반환합니다.
+     * 
+     * @tag User Public
+     */
     @TypedRoute.Post("sign")
     async signUp(
         @TypedBody() body: UserBody.Post.SignUp

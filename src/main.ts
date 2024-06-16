@@ -8,6 +8,7 @@ import { AppModule } from './app.module';
 import { readFileSync } from "fs"
 import * as path from "path"
 import * as dotenv from "dotenv"
+import { SwaggerSetting } from './swagger.setting';
 
 dotenv.config()
 
@@ -27,6 +28,8 @@ async function bootstrap() {
   })
 
   app.use(cookieParser())
+
+  SwaggerSetting(app)
 
   await app.listen(port)
   .then(_=> Logger.log(`API 서버 초기화 ✅ : 대기 포트 => ${port}`, "APIServer"))

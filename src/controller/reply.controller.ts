@@ -12,7 +12,15 @@ export class ReplyController {
     constructor(
         private readonly service: ReplyService,
     ){}
-
+    
+    /**
+     * 토큰이 만료되었다면 에러를 쓰로잉 합니다.
+     * 
+     * @param {ReplyBody.Post.Create} body 
+     * @returns 댓글, 대댓글 작성 여부를 반환합니다.
+     * 
+     * @tag Reply Private
+     */
     @TypedRoute.Post()
     @UseGuards(AuthGuard)
     async write(
@@ -34,6 +42,14 @@ export class ReplyController {
         } catch(e) { return e } 
     }
 
+    /**
+     * 토큰이 만료되었다면 에러를 쓰로잉 합니다.
+     * 
+     * @param {ReplyBody.Patch.Update} body 
+     * @returns 댓글, 대댓글 수정 여부를 반환합니다.
+     * 
+     * @tag Reply Private
+     */
     @TypedRoute.Patch()
     @UseGuards(AuthGuard)
     async edit(
@@ -54,6 +70,14 @@ export class ReplyController {
         } catch(e) { return e }
     }
 
+    /**
+     * 토큰이 만료되었다면 에러를 쓰로잉 합니다.
+     * 
+     * @param {ReplyBody.Delete.Remove} body 
+     * @returns 댓글, 대댓글 삭제 여부를 반환합니다.
+     * 
+     * @tag Reply Private
+     */
     @TypedRoute.Delete()
     @UseGuards(AuthGuard)
     async delete(

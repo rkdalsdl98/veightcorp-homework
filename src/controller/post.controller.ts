@@ -14,6 +14,14 @@ export class PostController {
         private readonly service: PostService,
     ){}
 
+    /**
+     * 주어진 쿼리 파라미터에 따라 다른 결과를 반환합니다.
+     * 
+     * @param {PostParam.Get.Search} query 
+     * @returns 게시글을 조회합니다.
+     * 
+     * @tag Post Public
+     */
     @TypedRoute.Get()
     async search(
         @TypedQuery() query: PostParam.Get.Search
@@ -34,6 +42,12 @@ export class PostController {
         } catch(e) { return e }
     }
 
+    /**
+     * @param {string} id 
+     * @returns 게시글의 상세정보를 반환합니다.
+     * 
+     * @tag Post Public
+     */
     @TypedRoute.Get(":id")
     async getDetail(
         @TypedParam("id") id: string
@@ -47,6 +61,14 @@ export class PostController {
         } catch(e) { return e }
     }
 
+    /**
+     * 토큰이 만료되었다면 에러를 쓰로잉 합니다.
+     * 
+     * @param {PostBody.Post.Create} body 
+     * @returns 게시글 작성 여부를 반환합니다.
+     * 
+     * @tag Post Private
+     */
     @TypedRoute.Post()
     @UseGuards(AuthGuard)
     async write(
@@ -68,6 +90,14 @@ export class PostController {
         } catch(e) { return e }
     }
     
+    /**
+     * 토큰이 만료되었다면 에러를 쓰로잉 합니다.
+     * 
+     * @param {PostBody.Patch.Update} body 
+     * @returns 게시글 수정 여부를 반환합니다.
+     * 
+     * @tag Post Private
+     */
     @TypedRoute.Patch()
     @UseGuards(AuthGuard)
     async edit(
@@ -92,6 +122,14 @@ export class PostController {
         } catch(e) { return e }
     }
 
+    /**
+     * 토큰이 만료되었다면 에러를 쓰로잉 합니다.
+     * 
+     * @param {PostBody.Delete.Remove} body 
+     * @returns 게시글 삭제 여부를 반환합니다.
+     * 
+     * @tag Post Private
+     */
     @TypedRoute.Delete()
     @UseGuards(AuthGuard)
     async delete(

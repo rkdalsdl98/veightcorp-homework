@@ -16,6 +16,14 @@ export class AWSController {
         private readonly service: AWSService,
     ) {}
 
+    /**
+     * 토큰이 만료되었다면 에러를 쓰로잉 합니다.
+     * 
+     * @param {Express.MulterS3.File[]} files 
+     * @returns S3 이미지 업로드 여부를 반환합니다.
+     * 
+     * @tag AWS Private
+     */
     @TypedRoute.Post()
     @UseInterceptors(FilesInterceptor('files', 1))
     @UseGuards(AuthGuard)
