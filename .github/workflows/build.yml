@@ -60,7 +60,7 @@ jobs:
       - name: Deploy to EC2
         run: |
               echo "${{ secrets.PRIVATE_KEY }}" >> ${{ secrets.PRIVATE_KEY_NAME }}
-              ssh -i "${{ secrets.PRIVATE_KEY_NAME }}" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}.${{ EC2_REGION }}.compute.amazonaws.com
+              ssh -i "${{ secrets.PRIVATE_KEY_NAME }}" ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}.${{ secrets.REGION }}.compute.amazonaws.com
 
               git config --global user.name ${{ secrets.GIT_USER }}
               git config --global user.email ${{ secrets.GIT_USER_EMAIL }}
