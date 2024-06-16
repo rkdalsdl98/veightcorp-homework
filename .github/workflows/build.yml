@@ -1,0 +1,59 @@
+# github repository actions 페이지에 나타날 이름
+name: VeightCorp-Homework
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: 변경사항 체크 및 캐싱
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: NodeJS Setup
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ secrets.NODE_VERSION }}
+      - name: 모듈 정보 캐싱
+        uses: actions/cache@v2
+        id: cache
+        with:
+          path: node_modules
+          key: npm-packages-${{ hashFiles('**/package-lock.json') }}
+      - name: 변경사항이 존재 할 경우 빌드
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
+      - run: npm run build
+  deploy:
+    needs: build
+    name: 배포 시작
+    if: ${{ success() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: 도커 빌드
+        run: |
+              docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
+              docker build -f Dockerfile -t ${{ secrets.DOCEKR_REPO }}/veightcorp-homework:deploy .
+              docker build -f Dockerfile -t ${{ secrets.DOCEKR_REPO }}/veightcorp-db:deploy ./prisma
+              docker push ${{ secrets.DOCEKR_REPO }}/veightcorp-homework:deploy
+              docker push ${{ secrets.DOCEKR_REPO }}/veightcorp-db:deploy
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }} # EC2 퍼블릭 IPv4 DNS
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          script: |
+                   cd ./usr/src/app
+                   echo "${{ secrets.ENV_VAL }}" .env
+                   sudo service docker start
+                   sudo docker login --username ${{ secrets.DOCKER_USER }}
+                   sudo docker system prune -a --volumes -f
+                   sudo docker-compose up
+                   

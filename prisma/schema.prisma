@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["windows", "darwin", "debian-openssl-3.0.x"] // 윈도우, 맥, 우분투 20.04
+  previewFeatures = ["referentialActions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model user {
+  uuid String @id @db.VarChar(32) @default(cuid())
+  email String @unique @db.VarChar(50)
+  pass String @db.VarChar(100)
+  salt String @db.VarChar(34)
+  authorities userauthority[] @relation("UserAuthorities")
+}
+
+model userauthority {
+  id Int @id @db.Integer @default(autoincrement())
+  authority String @db.VarChar(10)
+  user_uid String @db.VarChar(32)
+  user user @relation("UserAuthorities", references: [uuid], fields: [user_uid], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model post {
+  uuid String @id @db.VarChar(32) @default(cuid())
+  category String @db.VarChar(10) @default("q-and-a")
+  title String @db.VarChar(100)
+  writer_email String
+  detail postdetail? @relation("PostDetail")
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+}
+
+model postdetail {
+  uuid String @id @db.VarChar(32) @default(cuid())
+  contents String @db.Text @default("")
+  views Int @db.Integer @default(0)
+  post_id String @unique
+  post post @relation("PostDetail", references: [uuid], fields: [post_id], onUpdate: Cascade, onDelete: Cascade)
+  replies reply[] @relation("Reply")
+  updatedAt DateTime @updatedAt
+}
+
+model reply {
+  uuid String @id @db.VarChar(32) @default(cuid())
+  contents String @db.VarChar(255) @default("")
+  writer_email String
+  detail_id String
+  detail postdetail @relation("Reply", references: [uuid], fields: [detail_id], onDelete: Cascade, onUpdate: NoAction)
+  comment_id String? @db.VarChar(32)
+  createdAt DateTime @default(now())
+  deletedAt DateTime?
+}
