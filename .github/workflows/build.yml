@@ -59,9 +59,10 @@ jobs:
       #     tags: ${{ secrets.DOCKER_REPO }}/veightcorp-homework:deploy
       - name: Deploy to EC2
         run: |
-            echo "${{ secrets.PRIVATE_KEY }}" private_key.pem
+            cd /
+            echo "${{ secrets.PRIVATE_KEY }}" >> private_key.pem
             ssh -i "private_key.pem" ${{ secrets.EC2_USER }}@${{ secrets.HOST }}
-            
+
             whoami
 
 
