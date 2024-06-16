@@ -61,9 +61,17 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
-          username: ${{ secrets.EC2_VEIGHT }}
-          password: ${{ secrets.EC2_VEIGHT_PASS }}
+          username: ${{ secrets.EC2_USER }}
           port: ${{ secrets.PORT }}
+          key: ${{ secrets.PRIVATE_KEY }}
+          sync: false
+          debug: true
+          use_insecure_cipher: false
+          timeout: 30s
+          command_timeout: 10m
+          proxy_port: 22
+          proxy_timeout: 30s
+          proxy_use_insecure_cipher: false
           script: |
                   whoami
         
