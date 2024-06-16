@@ -38,8 +38,8 @@ jobs:
       - name: 도커 빌드
         run: |
               docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASS }}
-              docker build ${{ secrets.DOCEKR_REPO }}/veightcorp-homework:deploy .
-              docker build ${{ secrets.DOCEKR_REPO }}/veightcorp-db:deploy ./prisma
+              docker build -t ${{ secrets.DOCEKR_REPO }}/veightcorp-homework:deploy .
+              docker build -t ${{ secrets.DOCEKR_REPO }}/veightcorp-db:deploy ./prisma
               docker push ${{ secrets.DOCEKR_REPO }}/veightcorp-homework:deploy
               docker push ${{ secrets.DOCEKR_REPO }}/veightcorp-db:deploy
 
