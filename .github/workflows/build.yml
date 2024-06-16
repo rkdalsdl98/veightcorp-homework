@@ -62,6 +62,7 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.EC2_USER }}
+          port: ${{ secrets.PORT }}
           key: ${{ secrets.PRIVATE_KEY }}
           script: |
                   git config --global user.name ${{ secrets.GIT_USER }}
@@ -71,8 +72,10 @@ jobs:
                   git pull origin main
 
                   echo "${{ secrets.ENV_VAL }}" .env
+                  
                   sudo service docker start
                   sudo docker login --username ${{ secrets.DOCKER_USER }}
                   sudo docker system prune -a --volumes -f
+                  sudo docker-compose build
                   sudo docker-compose up
                    
